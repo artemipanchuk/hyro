@@ -3,8 +3,10 @@
 #include <linux/types.h>
 #include <linux/stat.h>
 
-#include "l3g4200d.h"
+#include "syscalls_wrapper.h"
 #include "i2c.h"
+
+#include "l3g4200d.h"
 
 /**
  * @function l3g4200d_setup
@@ -12,7 +14,7 @@
  */
 int l3g4200d_setup(int fd) {
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, L3G4200D_ADDRESS) < 0) {
+	if (sys_ioctl(fd, I2C_SLAVE, L3G4200D_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to get bus access to talk to l3g4200d\n");
 
 		return -1;
@@ -37,7 +39,7 @@ void l3g4200d_read(int fd, int* x_o, int* y_o, int* z_o) {
 	unsigned char buf[6];
 
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, L3G4200D_ADDRESS) < 0) {
+	if (sys_ioctl(fd, I2C_SLAVE, L3G4200D_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to get bus access to l3g4200d\n");
 	}
 

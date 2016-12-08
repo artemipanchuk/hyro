@@ -1,16 +1,15 @@
-#include <linux/init.h>  
-#include <linux/kernel.h> 
+#include <linux/init.h>
+#include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/timer.h>
+#include <linux/slab.h>
 
 #include <linux/fs.h>
 #include <linux/miscdevice.h>
 
 #include <asm/uaccess.h>
 
+#include "lib/syscalls_wrapper.h"
 #include "lib/driver.h"
-
-#define PI 3.14159265359
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("GY80 driver");
@@ -35,7 +34,7 @@ static ssize_t gy80_module_read(struct file *file, char *buffer, size_t count, l
 	/* Tell the user how much data we wrote */
 	*ppos = length;
 
-	free(driver_answer);
+	kfree(driver_answer);
 
 	return length;
 }
@@ -51,43 +50,37 @@ static struct miscdevice gy80_module_dev = {
 	&gy80_module_fops
 };
 
-void gy80_timer_callback(unsigned long data) {
-	// printk("gy80_timer_callback called (%ld).\n", jiffies);
-
-	update_driver();
-}
-
-static struct timer_list gy80_timer;
-
 static int __init gy80_module_init (void) {
 	int result;
+
+	printk(KERN_INFO "GY80 Module: initialization started\n");
 
 	/* Register gy80 device */
 	result = misc_register(&gy80_module_dev);
 	if (result) {
 		printk(KERN_ERR "GY80 Module: Unable to register GY80 module misc device\n");
 		
-		return 1;
+		return -1;
+	}
+
+	result = setup_syscalls_wrapper();
+
+	if (result == 1) {
+		printk(KERN_ERR "GY80 Module: Unable to setup syscalls wrapper\n");
+
+		misc_deregister(&gy80_module_dev);
+		
+		return -1;
 	}
 
 	result = setup_driver();
 
 	if (result == 1) {
 		printk(KERN_ERR "GY80 Module: Unable to setup driver\n");
+
+		misc_deregister(&gy80_module_dev);
 		
-		return 1;
-	}
-
-	/* Setup timer */
-	setup_timer(&gy80_timer, gy80_timer_callback, 0);
-
-	/* Run timer */
-	printk("Starting timer to fire in 200ms (%ld)\n", jiffies);
-	result = mod_timer(&gy80_timer, jiffies + msecs_to_jiffies(200));
-	if (result) {
-		printk("GY80 Module: Unable to run timer\n");
-
-		return 1;
+		return -1;
 	}
 
 	printk(KERN_INFO "GY80 Module: successfully initialized\n");
@@ -96,14 +89,9 @@ static int __init gy80_module_init (void) {
 }
 
 static void __exit gy80_module_exit (void) {
-	int result;
+	printk(KERN_INFO "GY80 Module: exit started\n");
 	
 	misc_deregister(&gy80_module_dev);
-
-	result = del_timer(&gy80_timer);
-	if (result) {
-		printk(KERN_ERR "GY80 Module: failed to stop timer\n");
-	}
 
 	printk(KERN_INFO "GY80 Module: successfully exited\n");
 }

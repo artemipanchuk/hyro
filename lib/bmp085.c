@@ -2,6 +2,8 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 #include <linux/stat.h>
+#include <linux/syscalls.h>
+#include <linux/delay.h>
 
 #include "bmp085.h"
 #include "i2c.h"
@@ -20,7 +22,7 @@ int bmp085_setup(int fd) {
 	char data[22];
 
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, BMP085_ADDRESS) < 0)  {
+	if (sys_ioctl(fd, I2C_SLAVE, BMP085_ADDRESS) < 0)  {
 		printk(KERN_ERR "GY80 Module: Unable to get bus access to talk to bmp085\n");
 
 		return -1;
@@ -28,7 +30,7 @@ int bmp085_setup(int fd) {
 
 	i2c_seek(fd, 0xAA);
 	
-	if (read(fd, data, 22) != 22){
+	if (sys_read(fd, data, 22) != 22){
 		printk(KERN_ERR "GY80 Module: Unable to read calibration data from bmp085\n");
 
 		return -1;
@@ -65,31 +67,32 @@ void bmp085_read(int fd, long* t_o, long* p_o, float* a_o) {
 	float alt;
 
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, BMP085_ADDRESS) < 0) {
+	if (sys_ioctl(fd, I2C_SLAVE, BMP085_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to get access to bmp085\n");
 	}
 
 	/* Start conversion to get temperature */
-	if (i2c_write_reg(fd, 0xF4, 0x2E) < 0)
-		exit(1);
+	if (i2c_write_reg(fd, 0xF4, 0x2E) < 0) {
+		printk(KERN_ERR "GY80 Module: Unable to write to bmp085\n");
+	}
 
-	usleep(4500);
+	udelay(4500);
 
 	i2c_seek(fd, 0xF6);
-	if (read(fd, buf, 2) != 2){
+	if (sys_read(fd, buf, 2) != 2){
 		printk(KERN_ERR "GY80 Module: Unable to read from bmp085\n");
 	}
 
 	ut = (buf[0] <<8) | buf[1];
 
 	if (i2c_write_reg(fd, 0xF4, 0x34 + (oss <<6)) < 0)
-		exit(1);
+		printk(KERN_ERR "GY80 Module: Unable write to bmp085\n");
 
 	/* Changes depending on value of oss */
-	usleep(25500);
+	udelay(25500);
 
 	i2c_seek(fd, 0xF6);
-	if (read(fd, buf, 3) != 3){
+	if (sys_read(fd, buf, 3) != 3){
 		printk(KERN_ERR "GY80 Module: Unable to read from bmp085\n");
 	}
 
@@ -123,7 +126,9 @@ void bmp085_read(int fd, long* t_o, long* p_o, float* a_o) {
 	x1 = (x1*3038)>>16;
 	x2 = (-7357*p)>>16;
 	p = p + ((x1+x2+3781)>>4);
-	alt = 44330.0 * (1-pow(p/101325.0,1.0/5.255));
+	
+	/* todo: alt = 44330.0 * (1-pow(p/101325.0,1.0/5.255)); */
+	alt = 0;
 
 	*t_o = t/10;
 	*p_o = p;

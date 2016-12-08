@@ -1,5 +1,5 @@
-#ifndef MadgwickAHRS_h
-#define MadgwickAHRS_h
+#ifndef AHRS_h
+#define AHRS_h
 
 /* algorithm gain */
 extern volatile float beta;

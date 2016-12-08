@@ -2,6 +2,8 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 #include <linux/stat.h>
+#include <linux/syscalls.h>
+#include <linux/delay.h>
 
 #include "mc5883l.h"
 #include "i2c.h"
@@ -12,7 +14,7 @@
  */
 int mc5883l_setup(int fd) {
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, MC5883L_ADDRESS) < 0) {
+	if (sys_ioctl(fd, I2C_SLAVE, MC5883L_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to get bus access to talk to mc5883l\n");
 
 		return -1;
@@ -34,17 +36,17 @@ void mc5883l_read(int fd, int* x_o, int* y_o, int* z_o) {
 	short int x,y,z;
 
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, MC5883L_ADDRESS) < 0) {
+	if (sys_ioctl(fd, I2C_SLAVE, MC5883L_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module:Unable to get bus access to mc5883l\n");
 	}
 
 	i2c_seek(fd, 3);
 
 	/* Wait for conversion, should realy be monitoring status register */
-	usleep(10000);
+	udelay(10000);
 
 	/* Read the mc5883l registers */
-	if (read(fd, buf, 6) != 6){
+	if (sys_read(fd, buf, 6) != 6){
 		printk(KERN_ERR "GY80 Module: Unable to read from mc5883l\n");
 	}
 

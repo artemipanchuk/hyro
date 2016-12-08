@@ -3,8 +3,10 @@
 #include <linux/types.h>
 #include <linux/stat.h>
 
-#include "adxl345.h"
+#include "syscalls_wrapper.h"
 #include "i2c.h"
+
+#include "adxl345.h"
 
 /**
  * @function accel_setup
@@ -12,7 +14,7 @@
  */
 int adxl345_setup(int fd) {
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, ADXL345_ADDRESS) < 0) {
+	if (sys_ioctl(fd, I2C_SLAVE, ADXL345_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to get bus access to talk to adxl345\n");
 
 		return -1;
@@ -45,7 +47,7 @@ void adxl345_read(int fd, int* x_o, int* y_o, int* z_o) {
 	unsigned char buf[6];
 
 	/* Set address of the device we wish to speak to */
-	if (ioctl(fd, I2C_SLAVE, ADXL345_ADDRESS) < 0) {
+	if (sys_ioctl(fd, I2C_SLAVE, ADXL345_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to get bus access adxl345\n");
 	}
 

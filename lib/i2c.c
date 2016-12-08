@@ -6,6 +6,8 @@
 #include <linux/fs.h>
 #include <linux/slab.h>
 
+#include "syscalls_wrapper.h"
+
 #include "i2c.h"
 
 /**
