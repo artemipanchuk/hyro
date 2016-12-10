@@ -12,16 +12,18 @@ static asmlinkage long (*local_sys_ioctl) (unsigned int, unsigned int, unsigned 
 static asmlinkage long (*local_sys_write) (unsigned int, const char __user*, size_t);
 static asmlinkage long (*local_sys_open)  (const char __user*, int, umode_t);
 static asmlinkage long (*local_sys_read)  (unsigned int, char __user*, size_t);
+static asmlinkage long (*local_sys_close)  (unsigned int);
 
 static void* lookup_symbol(const char *sym) {
 	return (void*) kallsyms_lookup_name(sym);
 }
 
 int setup_syscalls_wrapper(void) {
-	local_sys_ioctl = lookup_symbol("sys_ioctl");
-	local_sys_write = lookup_symbol("sys_write");
-	local_sys_open  = lookup_symbol("sys_open");
-	local_sys_read  = lookup_symbol("sys_read");
+	local_sys_ioctl  = lookup_symbol("sys_ioctl");
+	local_sys_write  = lookup_symbol("sys_write");
+	local_sys_open   = lookup_symbol("sys_open");
+	local_sys_read   = lookup_symbol("sys_read");
+	local_sys_close  = lookup_symbol("sys_close");
 
 	if (local_sys_ioctl == NULL)
 		return 1;
@@ -33,6 +35,9 @@ int setup_syscalls_wrapper(void) {
 		return 1;
 
 	if (local_sys_read == NULL)
+		return 1;
+
+	if (local_sys_close == NULL)
 		return 1;
 
 	return 0;
@@ -84,6 +89,19 @@ asmlinkage long sys_read(unsigned int fd, char __user *buf, size_t count) {
 	set_fs(get_ds());
 
 	result = local_sys_read(fd, buf, count);
+
+	set_fs(fs);
+
+	return result;
+}
+
+asmlinkage long sys_close(unsigned int fd) {
+	long result;
+	
+	mm_segment_t fs = get_fs();
+	set_fs(get_ds());
+
+	result = local_sys_close(fd);
 
 	set_fs(fs);
 

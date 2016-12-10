@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>hyro</title>
+
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" href="/client/libs/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/client/libs/bootstrap/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="/client/libs/font-awesome.min.css">
+
+		<script src="client/libs/require.js"></script>
+		<script>
+			requirejs.config({
+				baseUrl: 'client',
+				paths: {
+					jquery:  'libs/jquery-2.1.4.min',
+					threejs:  'libs/three.min',
+					jsviews: 'libs/jsviews.min',
+					bootstrap: 'libs/bootstrap/js/bootstrap.min',
+					text: 'libs/text',
+					css: 'libs/css.min'
+				}
+			});
+
+			requirejs(['jquery', 'jsviews', 'threejs'], function() {
+				requirejs(['classes/UI', 'classes/Socket'], function() {
+					var ui = new UI,
+						socket;
+
+					$.observable(window).setProperty({
+						ui: ui
+					});
+
+					$.templates.tmplUI.link("body", window);
+
+					ui.initWebGL('#webglSection');
+
+					socket = new Socket('ws://localhost:5001', function(data) {
+						var array;
+
+						try {
+							array = JSON.parse(data);
+
+							if (!Array.isArray(array)) {
+								throw new Error('ERROR: corrupted data');
+							}
+						} catch (e) {
+							throw e;
+						} finally {
+							ui.updateWebGL(array[0], array[1], array[2], array[3]);
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

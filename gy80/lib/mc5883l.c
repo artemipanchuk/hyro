@@ -2,11 +2,12 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 #include <linux/stat.h>
-#include <linux/syscalls.h>
 #include <linux/delay.h>
 
-#include "mc5883l.h"
+#include "syscalls_wrapper.h"
 #include "i2c.h"
+
+#include "mc5883l.h"
 
 /**
  * @function mc5883l_setup
@@ -43,7 +44,7 @@ void mc5883l_read(int fd, int* x_o, int* y_o, int* z_o) {
 	i2c_seek(fd, 3);
 
 	/* Wait for conversion, should realy be monitoring status register */
-	udelay(10000);
+	msleep(10);
 
 	/* Read the mc5883l registers */
 	if (sys_read(fd, buf, 6) != 6){

@@ -1,0 +1,430 @@
+@font-face {
+	font-family: "simplesnails";
+	font-style:  normal;
+	src: url("/client/fonts/simplesnails.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "pfsquaresans";
+	font-style: normal;
+	src: url("/client/fonts/pfsquaresans.otf");
+}
+
+body {
+	background-color: #000000;
+}
+
+header {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 50px;
+	background: #302050;
+	color: #FFFFFF;
+	font-family: "simplesnails";
+	z-index: 2;
+}
+
+header h1 {
+	padding-left: 20px;
+	line-height: 30px;
+	font-weight: bold;
+}
+
+section {
+	padding-top: 50px;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	color: #000000;
+	opacity: 0;
+	transition: opacity linear 0.5s;
+	z-index: 0;
+	background-color: #FFFFFF;
+}
+
+section.active {
+	opacity: 1;
+	z-index: 1;
+}
+
+section .column {
+	height: 100%;
+	text-align: center;
+}
+
+section .column .box {
+	position: absolute;
+	width: 100%;
+	height: 50px;
+	top: 33%;
+	font-family: consolas;
+	font-size: 50px;
+	color: #302050;
+	cursor: pointer;
+}
+
+section .column .box:hover {
+	font-weight: bold;
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background: #302050;
+	height: 100px;
+	color: #FFFFFF;
+	font-family: "consolas";
+	z-index: 2;
+}
+
+footer h2 {
+	padding-left: 20px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+section#editorSection {
+	background-color: #000000;
+}
+
+section#editorSection.active {
+	padding-top: 0;
+	z-index: 3;
+}
+
+div#quitIcon {
+	position: absolute;
+	bottom: 0;
+	width: 50px;
+	height: 50px;
+	background: #302050;
+	left: 0;
+
+	text-align: center;
+	line-height: 50px;
+	color: #FFFFFF;
+	font-size: 20px;
+
+	cursor: pointer;
+}
+
+div#objectsBox {
+	position: absolute;
+	left: 0;
+	top: -100px;
+	width: 100%;
+	height: 100px;
+	background: #000000;
+	border-bottom: 5px #302050 solid;
+	transition: top 0.5s ease-in;
+}
+
+div#objectsBox #objectsRow {
+	position: absolute;
+	width: 100%;
+	height: 100px;
+	overflow-x: scroll;
+	width: 100%;
+	overflow-y: hidden;
+	white-space: nowrap;
+
+	background-color: #000000;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	z-index: 3;
+}
+
+div#objectsBox.active {
+	top: 0;
+	display: block;
+}
+
+div#objectsBox .object {
+	width: 75px;
+	height: 75px;
+	margin: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	line-height: 75px;
+	text-align: center;
+	font: consolas;
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 20px;
+	cursor: pointer;
+	display: inline-block
+}
+
+div#objectsBox #addObject {
+	background-color: #302050;
+}
+
+div#objectsBox .objectA {
+	border: 5px #FF9999 dashed;
+	line-height: 65px;
+}
+
+div#objectsBox .objectB {
+	border: 5px #9999FF dashed;
+	line-height: 65px;
+}
+
+div#objectsBox #objectsBoxParams {
+	z-index: 3;
+	position: absolute;
+	top: 100px;
+	width: 300px;
+	height: 300px;
+	background: #302050;
+	left: 0;
+
+	text-align: left;
+	line-height: 10px;
+	color: #FFFFFF;
+	font-size: 12px;
+
+	font-family: consolas;
+
+	padding: 15px;
+}
+
+div#objectsBox #objectsBoxParams #objectsBoxParamsApply {
+	cursor: pointer;
+	width: 30%;
+	display: inline-block;
+	text-align: center;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div#objectsBox #objectsBoxParams #objectsBoxParamsClose {
+	cursor: pointer;
+	width: 30%;
+	display: inline-block;
+	text-align: center;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+div#objectsBox #objectsBoxParams #objectsBoxParamsRemove {
+	cursor: pointer;
+	width: 30%;
+	display: inline-block;
+	text-align: center;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div#objectsBox #objectsBoxParams input {
+	color: #000000;
+	width: 100%;
+}
+
+div#objectsBox #objectsBoxParams input[type=number] {
+	color: #000000;
+	width: 50px;
+}
+
+div#objectsBox #objectsBoxParams input[type=color] {
+	color: #000000;
+	width: 50px;
+}
+
+div#objectsBox #objectsBoxToggler {
+	position: absolute;
+	top: 100px;
+	width: 50px;
+	height: 50px;
+	background: #302050;
+	left: 0;
+
+	text-align: center;
+	line-height: 50px;
+	color: #FFFFFF;
+	font-size: 20px;
+
+	cursor: pointer;
+}
+
+div#lightsBox {
+	position: absolute;
+	left: 0;
+	top: -100px;
+	width: 100%;
+	height: 100px;
+	background: #000000;
+	border-bottom: 5px #302050 solid;
+	transition: top 0.5s ease-in;
+}
+
+div#lightsBox #lightsRow {
+	position: absolute;
+	width: 100%;
+	height: 100px;
+	overflow-x: scroll;
+	width: 100%;
+	overflow-y: hidden;
+	white-space: nowrap;
+
+	background-color: #000000;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	z-index: 3;
+}
+
+div#lightsBox.active {
+	top: 0;
+	display: block;
+}
+
+div#lightsBox .object {
+	width: 75px;
+	height: 75px;
+	margin: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	line-height: 75px;
+	text-align: center;
+	font: consolas;
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 20px;
+	cursor: pointer;
+	display: inline-block
+	z-index: 3;
+}
+
+div#lightsBox #lightsBoxParams {
+	z-index: 3;
+	position: absolute;
+	top: 100px;
+	width: 300px;
+	height: 300px;
+	background: #302050;
+	left: 0;
+
+	text-align: left;
+	line-height: 10px;
+	color: #FFFFFF;
+	font-size: 12px;
+
+	font-family: consolas;
+
+	padding: 15px;
+}
+
+div#lightsBox #lightsBoxParams #lightsBoxParamsApply {
+	cursor: pointer;
+	width: 30%;
+	display: inline-block;
+	text-align: center;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div#lightsBox #lightsBoxParams #lightsBoxParamsClose {
+	cursor: pointer;
+	width: 30%;
+	display: inline-block;
+	text-align: center;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+div#lightsBox #lightsBoxParams #lightsBoxParamsRemove {
+	cursor: pointer;
+	width: 30%;
+	display: inline-block;
+	text-align: center;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div#lightsBox #lightsBoxParams input {
+	color: #000000;
+	width: 100%;
+}
+
+div#lightsBox #lightsBoxParams input[type=number] {
+	color: #000000;
+	width: 50px;
+}
+
+div#lightsBox #lightsBoxParams input[type=color] {
+	color: #000000;
+	width: 50px;
+}
+
+div#lightsBox #lightsBoxToggler {
+	position: absolute;
+	top: 100px;
+	width: 50px;
+	height: 50px;
+	background: #302050;
+	left: 60px;
+
+	text-align: center;
+	line-height: 50px;
+	color: #FFFFFF;
+	font-size: 20px;
+
+	cursor: pointer;
+}
+
+div#canvasBox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #000000;
+}
+
+canvas {
+	width: 100%;
+	height: 100%;
+}

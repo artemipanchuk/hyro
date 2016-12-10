@@ -49,11 +49,15 @@ void adxl345_read(int fd, int* x_o, int* y_o, int* z_o) {
 	/* Set address of the device we wish to speak to */
 	if (sys_ioctl(fd, I2C_SLAVE, ADXL345_ADDRESS) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to get bus access adxl345\n");
+
+		return;
 	}
 
 	/* Read the registers */
 	if (i2c_read(fd, 0x32 | 0x80, buf, 6) < 0) {
 		printk(KERN_ERR "GY80 Module: Unable to read from adxl345\n");
+
+		return;
 	}
 
 	x = (buf[1] <<8) | buf[0];

@@ -2,11 +2,12 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 #include <linux/stat.h>
-#include <linux/syscalls.h>
 #include <linux/delay.h>
 
-#include "bmp085.h"
+#include "syscalls_wrapper.h"
 #include "i2c.h"
+
+#include "l3g4200d.h"
 
 struct p_calib_data {
 	short ac1,ac2,ac3;
@@ -76,7 +77,7 @@ void bmp085_read(int fd, long* t_o, long* p_o, float* a_o) {
 		printk(KERN_ERR "GY80 Module: Unable to write to bmp085\n");
 	}
 
-	udelay(4500);
+	msleep(5);
 
 	i2c_seek(fd, 0xF6);
 	if (sys_read(fd, buf, 2) != 2){
@@ -89,7 +90,7 @@ void bmp085_read(int fd, long* t_o, long* p_o, float* a_o) {
 		printk(KERN_ERR "GY80 Module: Unable write to bmp085\n");
 
 	/* Changes depending on value of oss */
-	udelay(25500);
+	msleep(26);
 
 	i2c_seek(fd, 0xF6);
 	if (sys_read(fd, buf, 3) != 3){

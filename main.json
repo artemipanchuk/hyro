@@ -1,0 +1,4 @@
+{
+	"HTTPServerPort": 5000,
+	"WSServerPort":   5001
+}
