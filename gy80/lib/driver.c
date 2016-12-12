@@ -77,12 +77,12 @@ char* read_driver(void) {
 
 	update_driver();
 
-	result = kmalloc(64, GFP_KERNEL);
+	result = kmalloc(128, GFP_KERNEL);
 	
 	sprintf(
 		result, 
-		"%5d %5d %5d %5d %5d %5d %5d %5d %5d\n",
-		ax, ay, az, gx, gy, gz, mx, my, mz
+		"%7d %7d %7d %7d %7d %7d %7d %7d %7d\n",
+		gx, gy, gz, ax, ay, az, mx, my, mz
 	);
 
 	return result;

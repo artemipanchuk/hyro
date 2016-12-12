@@ -47,11 +47,11 @@ void l3g4200d_read(int fd, int* x_o, int* y_o, int* z_o) {
 		printk(KERN_ERR "GY80 Module: Unable to read from l3g4200d\n");
 	}
 
-	x = (buf[1] <<8) | buf[0];
-	y = (buf[3] <<8) | buf[2];
-	z = (buf[5] <<8) | buf[4];
+	x = (buf[1] << 8) | buf[0];
+	y = (buf[3] << 8) | buf[2];
+	z = (buf[5] << 8) | buf[4];
 
-	*x_o = x-5;
-	*y_o = y+2;
-	*z_o = z-7;
+	*x_o = x;
+	*y_o = y;
+	*z_o = z;
 }

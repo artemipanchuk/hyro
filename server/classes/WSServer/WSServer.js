@@ -20,6 +20,10 @@ var WSServer = (function() {
 				callback(message);
 			});
 
+			ws.on('error', function(error) {
+				delete clients[id];
+			});
+
 			ws.on('close', function() {
 				delete clients[id];
 			});
@@ -28,9 +32,14 @@ var WSServer = (function() {
 
 	WSServer.prototype.send = function(data) {
 		for (var id in clients) if (clients.hasOwnProperty(id)) {
+
 			var ws = clients[id];
 
-			ws.send(data);
+			try {
+				ws.send(data);
+			} catch (error) {
+				delete clients[id];
+			}
 		}
 	};
 

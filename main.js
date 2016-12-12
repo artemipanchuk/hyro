@@ -17,8 +17,8 @@ var httpServer = new HTTPServer,
 httpServer.run(main.HTTPServerPort);
 wsServer.run(main.WSServerPort);
 
-imu.read();
+setInterval(function() {
+	wsServer.send(JSON.stringify(ahrs.process(imu.read())));
+}, 1000/50);
 
-// setInterval(function() {
-// 	wsServer.send(JSON.stringify([0, 0, 0, 1]));
-// }, 1000)
+console.log('Everything is up and running.');

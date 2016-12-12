@@ -36,19 +36,15 @@
 
 					ui.initWebGL('#webglSection');
 
-					socket = new Socket('ws://localhost:5001', function(data) {
-						var array;
+					socket = new Socket('ws://' + location.hostname + ':5001', function(data) {
+						var quaternion;
 
 						try {
-							array = JSON.parse(data);
-
-							if (!Array.isArray(array)) {
-								throw new Error('ERROR: corrupted data');
-							}
+							quaternion = JSON.parse(data);
 						} catch (e) {
 							throw e;
 						} finally {
-							ui.updateWebGL(array[0], array[1], array[2], array[3]);
+							ui.updateWebGL(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 						}
 					});
 				});

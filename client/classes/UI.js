@@ -25,15 +25,14 @@ define([
 			scene = new THREE.Scene();
 			
 			// Object setup
-			geometry = new THREE.IcosahedronGeometry(200, 1);
+			geometry = new THREE.CubeGeometry(300, 400, 60);
 			material = new THREE.MeshBasicMaterial({
-				color:              0xfff999fff,
-				wireframe:          true,
-				wireframelinewidth: 10
+				color:     'white',
+				wireframe: true,
+				wireframeLinewidth: 5
 			});
 
 			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.y = 50;
 
 			scene.add(mesh);
 			
@@ -42,16 +41,18 @@ define([
 			renderer.setSize(wrapper.width(), wrapper.height());
 			
 			$('#webglSection').append(renderer.domElement);
-
-			renderer.render(scene, camera);
 		}
 
 		UI.prototype.updateWebGL = function(x, y, z, w) {
 			var quaternion = new THREE.Quaternion(x, y, z, w);
 
-			mesh.matrix.setRotationFromQuaternion(quaternion);
+			mesh.matrix.makeRotationFromQuaternion(quaternion);
 
-			renderer.render( scene, camera);
+			mesh.applyMatrix(mesh.matrix.clone());
+
+			mesh.position.y = 50;
+
+			renderer.render(scene, camera);
 		}
 
 		return UI;
